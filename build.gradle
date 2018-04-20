@@ -1,0 +1,53 @@
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+
+group = "com.github.therapi"
+version = "0.1.0-SNAPSHOT"
+
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compileOnly files(System.properties['java.home'] + "/../lib/tools.jar")
+    compile 'com.google.testing.compile:compile-testing:0.11'
+
+    testCompile 'junit:junit:4.12'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+tasks.withType(JavaCompile) {
+    // disable annotation processing
+    options.compilerArgs << "-proc:none"
+}
+
+task install {
+    dependsOn(publishToMavenLocal)
+}
+
+task sourceJar(type: Jar, dependsOn: classes) {
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    from javadoc.destinationDir
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            artifact sourceJar {
+                classifier 'sources'
+            }
+
+            artifact javadocJar {
+                classifier 'javadoc'
+            }
+        }
+    }
+}

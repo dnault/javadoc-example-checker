@@ -1,0 +1,12 @@
+apply plugin: 'java'
+
+
+repositories {
+    mavenLocal()
+    jcenter()
+}
+
+dependencies {
+    // The production code uses the SLF4J logging API at compile time
+    compileOnly 'com.github.therapi:javadoc-example-checker:0.1.0-SNAPSHOT'
+}
